@@ -9,6 +9,9 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
@@ -23,9 +26,13 @@ public class BankingDao {
 
     static {
         try {
-            Configuration configuration =  new Configuration().configure();
-            ServiceRegistry serviceregistry=new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
-            factory = configuration.buildSessionFactory(serviceregistry);
+//            Configuration configuration =  new Configuration().configure();
+//            ServiceRegistry serviceregistry=new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
+//            factory = configuration.buildSessionFactory(serviceregistry);
+
+            StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
+            Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
+             factory = meta.getSessionFactoryBuilder().build();
         } catch (Throwable ex) {
             System.err.println("Failed to create sessionFactory object." + ex);
             throw new ExceptionInInitializerError(ex);
