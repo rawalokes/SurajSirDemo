@@ -1,9 +1,43 @@
 package com.banking.model;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Transient;
+import javax.servlet.http.HttpServlet;
 
 @Entity
 public class TransactionHistory {
+
+
+   @Id
+   private int transactionId;
+   private double transactionAmount;
+   private long transactionDate;
+   private PayrollAction action;
+   private String name;
+   private String contactNumber;
+
+   public enum PayrollAction{
+      WITHDRAW,
+      DEPOSITED
+   }
+
+   public String getName() {
+      HttpServlet
+      return name;
+   }
+
+   public void setName(String name) {
+      this.name = name;
+   }
+
+   public String getContactNumber() {
+      return contactNumber;
+   }
+
+   public void setContactNumber(String contactNumber) {
+      this.contactNumber = contactNumber;
+   }
 
    public int getTransactionId() {
       return transactionId;
@@ -37,22 +71,5 @@ public class TransactionHistory {
       this.action = action;
    }
 
-   public TransactedUser getUser() {
-      return user;
-   }
 
-   public void setUser(TransactedUser user) {
-      this.user = user;
-   }
-
-   private int transactionId;
-   private double transactionAmount;
-   private long transactionDate;
-   private PayrollAction action;
-   private TransactedUser user;
-
-   public enum PayrollAction{
-       WITHDRAW,
-       DEPOSITED
-   }
 }

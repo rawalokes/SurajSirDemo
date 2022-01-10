@@ -4,9 +4,9 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@IdClass(Account.class)
 public class Account {
     @Id
+    @GeneratedValue
     private int accountId;
     private double amount;
     private float interestRate;

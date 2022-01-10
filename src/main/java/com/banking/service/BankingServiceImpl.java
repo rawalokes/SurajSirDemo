@@ -1,6 +1,7 @@
 package com.banking.service;
 
 import com.banking.dao.BankingDao;
+import com.banking.model.Account;
 import com.banking.model.Customer;
 import com.banking.model.TransactedUser;
 
@@ -12,7 +13,8 @@ public class BankingServiceImpl implements BankingService{
 
     @Override
     public boolean createAccount(Customer customer) {
-       return false;
+        Account account = new BankingDao().addAccount(customer,5);
+        return account != null;
     }
 
     @Override

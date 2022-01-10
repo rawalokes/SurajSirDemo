@@ -7,15 +7,15 @@
         <property name="connection.url">jdbc:mysql://localhost:3306/test?autoReconnect=true&amp;useSSL=false&amp;useTimezone=true&amp;serverTimezone=UTC</property>
         <property name="dialect">org.hibernate.dialect.MySQL57Dialect</property>
         <property name="hibernate.connection.username">root</property>
-        <property name="hibernate.connection.password">suraj</property>
+        <property name="hibernate.connection.password"></property>
 
         <property name="show_sql">true</property>
 
 
-        <property name="transaction.factory_class">
+        <!--<property name="transaction.factory_class">
             org.hibernate.transaction.JDBCTransactionFactory
-        </property>
-        <property name="hbm2ddl.auto">update</property>
+        </property>-->
+        <property name="hibernate.hbm2ddl.auto">update</property>
 
         <mapping class="com.banking.model.Account" />
         <mapping class="com.banking.model.Customer" />

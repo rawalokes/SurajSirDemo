@@ -18,6 +18,8 @@ import org.hibernate.service.ServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class BankingDao {
@@ -26,6 +28,8 @@ public class BankingDao {
 
     static {
         try {
+            //  factory = new Configuration().configure().buildSessionFactory();
+
 //            Configuration configuration =  new Configuration().configure();
 //            ServiceRegistry serviceregistry=new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
 //            factory = configuration.buildSessionFactory(serviceregistry);
@@ -34,7 +38,7 @@ public class BankingDao {
             Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
              factory = meta.getSessionFactoryBuilder().build();
         } catch (Throwable ex) {
-            System.err.println("Failed to create sessionFactory object." + ex);
+            ex.printStackTrace();
             throw new ExceptionInInitializerError(ex);
         }
     }
@@ -46,8 +50,9 @@ public class BankingDao {
 
             tx = session.beginTransaction();
             int customerId = (int) session.save(customer);
-            Account account = new Account();
             customer.setId(customerId);
+            Account account = new Account();
+            account.setInterestRate(interestRate);
             account.setCustomer(customer);
             int accountId = (int) session.save(account);
             account.setAccountId(accountId);
@@ -73,8 +78,14 @@ public class BankingDao {
             history.setAction(TransactionHistory.PayrollAction.DEPOSITED);
             history.setTransactionAmount(amount);
             history.setTransactionDate(System.currentTimeMillis());
-            history.setUser(user);
-            account.getTransactionHistories().add(history);
+            history.setName(user.getName());
+            history.setContactNumber(user.getContactNumber());
+            List<TransactionHistory> historyList = account.getTransactionHistories();
+            if(historyList == null){
+                historyList = new ArrayList<>();
+            }
+            historyList.add(history);
+            account.setTransactionHistories(historyList);
             account.setAmount(amount + calculateInterest(account.getAmount(),account.getLastTotalAmountCalculatedDate(),account.getInterestRate()));
             account.setLastTotalAmountCalculatedDate(System.currentTimeMillis());
             session.update(account);
@@ -105,7 +116,8 @@ public class BankingDao {
             history.setAction(TransactionHistory.PayrollAction.WITHDRAW);
             history.setTransactionAmount(amount);
             history.setTransactionDate(System.currentTimeMillis());
-            history.setUser(user);
+            history.setName(user.getName());
+            history.setContactNumber(user.getContactNumber());
             account.getTransactionHistories().add(history);
             double totalAmount = account.getAmount() + calculateInterest(account.getAmount(),account.getLastTotalAmountCalculatedDate(),account.getInterestRate());
             if(totalAmount < amount){
